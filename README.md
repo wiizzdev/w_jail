@@ -8,7 +8,7 @@ Jail / RageUI v2 / Optimisé 0.00ms / Full Configurable
 - Configuration facile
 - Anti Déconnexion
 - Anti Mort
-- Commande : /jail id temps raison
+- Commande : /jail id temps raison | /unjail id | /jailoffline license temps raison
 
 ### Screenshot :
 
