@@ -87,7 +87,7 @@ RegisterCommand('unjail', function(source, args)
             Wait(100)
             if tonumber(JailTime[TargetPlayer.source].time) >= 0 then
                 JailTime[TargetPlayer.source].time = 0
-                TriggerClientEvent('esx:showNotification', source, "Le joueur ~b~"..GetPlayerName(xPlayer.source).." ~s~à été unjail")
+                TriggerClientEvent('esx:showNotification', source, "Le joueur ~b~"..GetPlayerName(xPlayer.source).." ~s~a été unjail")
                 TriggerClientEvent('jail:requestRequetteJailTime', TargetPlayer.source, 0)
                 for k,v in pairs(Config.Position["sortie"]) do
                     SetEntityCoords(GetPlayerPed(TargetPlayer.source), v.x, v.y, v.z)
