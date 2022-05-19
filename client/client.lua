@@ -84,7 +84,7 @@ Citizen.CreateThread(function()
 end)
 
 Citizen.CreateThread(function()
-	for k,v in pairs(Config.Position["sortie"]) do
+	for k,v in pairs(Config.Position["entrée"]) do
         if Config.Blip.Activer then
             local blip = AddBlipForCoord(v.x, v.y, v.z) 
             SetBlipSprite(blip, Config.Blip.Sprite)
