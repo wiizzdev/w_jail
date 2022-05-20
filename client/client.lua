@@ -5,7 +5,7 @@ Citizen.CreateThread(function()
 	end
 end)
 
-local mainMenu = RageUI.CreateMenu("", "Vous êtes en Jail")
+local mainMenu = RageUI.CreateMenu("", "Vous avez été Sanctionné")
 local TempsJail = 0
 local open = false
 
