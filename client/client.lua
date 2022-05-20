@@ -100,8 +100,8 @@ Citizen.CreateThread(function()
 end)
 
 Citizen.CreateThread(function()
-    TriggerEvent('chat:addSuggestion', '/jail', 'id, temps, raison')
-    TriggerEvent('chat:addSuggestion', '/jailoffline', 'license, temps, raison')
+    TriggerEvent('chat:addSuggestion', '/jail', 'id temps raison')
+    TriggerEvent('chat:addSuggestion', '/jailoffline', 'license temps raison')
     TriggerEvent('chat:addSuggestion', '/unjail', 'id')
 end)
 
