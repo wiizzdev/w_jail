@@ -5,7 +5,7 @@ Citizen.CreateThread(function()
 	end
 end)
 
-local mainMenu = RageUI.CreateMenu("", "Vous avez été Sanctionné")
+local mainMenu = RageUI.CreateMenu("", "Vous êtes en Jail")
 local TempsJail = 0
 local open = false
 
@@ -30,8 +30,16 @@ AddEventHandler('jail:openmenu', function(time, raison, staffname)
                     else
                         RageUI.Button("Temps restant: ~y~"..ESX.Math.Round(TempsJail).." minutes", nil, {}, true, {})
                     end
-                    RageUI.Button("Raison: ~o~"..raison.."", nil, {}, true, {})
-                    RageUI.Button("Nom du staff: ~g~"..staffname, nil, {}, true, {})
+                    if raison ~= nil then 
+                        RageUI.Button("Raison: ~o~"..raison.."", nil, {}, true, {})
+                    else
+                        RageUI.Button("Raison: ~o~Indéfinie", nil, {}, true, {})
+                    end
+                    if staffname ~= nil then 
+                        RageUI.Button("Nom du staff: ~g~"..staffname, nil, {}, true, {})
+                    else
+                        RageUI.Button("→ CONSOLE", nil, {}, true, {})
+                    end
                 end)
             Wait(0)
             end
@@ -49,9 +57,6 @@ Citizen.CreateThread(function()
             TriggerServerEvent('jail:mettretempsajour', TempsJail)
         end
         if tonumber(TempsJail) == 0 then
-            ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
-				TriggerEvent('skinchanger:loadSkin', skin)
-			end)
             RageUI.CloseAll()
             open = false
         end
@@ -92,8 +97,8 @@ Citizen.CreateThread(function()
 end)
 
 Citizen.CreateThread(function()
-    TriggerEvent('chat:addSuggestion', '/jail', 'id temps raison')
-    TriggerEvent('chat:addSuggestion', '/jailoffline', 'license temps raison')
+    TriggerEvent('chat:addSuggestion', '/jail', 'id, temps, raison')
+    TriggerEvent('chat:addSuggestion', '/jailoffline', 'license, temps, raison')
     TriggerEvent('chat:addSuggestion', '/unjail', 'id')
 end)
 
