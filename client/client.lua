@@ -30,11 +30,7 @@ AddEventHandler('jail:openmenu', function(time, raison, staffname)
                     else
                         RageUI.Button("Temps restant: ~y~"..ESX.Math.Round(TempsJail).." minutes", nil, {}, true, {})
                     end
-                    if raison ~= nil then 
-                        RageUI.Button("Raison: ~o~"..raison.."", nil, {}, true, {})
-                    else
-                        RageUI.Button("Raison: ~o~Indéfinie", nil, {}, true, {})
-                    end
+                    RageUI.Button("Raison: ~o~"..raison.."", nil, {}, true, {})
                     RageUI.Button("Nom du staff: ~g~"..staffname, nil, {}, true, {})
                 end)
             Wait(0)
