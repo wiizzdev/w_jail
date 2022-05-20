@@ -3,7 +3,7 @@ ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 local TempsJail = {}
-local PlayerDead = {}
+local JoueurEstMort = {}
 
 RegisterNetEvent('jail:combiendetemps')
 AddEventHandler('jail:combiendetemps', function()
@@ -148,7 +148,7 @@ AddEventHandler('playerDropped', function(reason)
                 TempsJail[xPlayer.source] = nil
             end
         end
-        if PlayerDead[source] then 
+        if JoueurEstMort[source] then 
             MySQL.Async.execute('INSERT INTO w_jail (identifier, time, raison, staffname) VALUES (@identifier, @time, @raison, @staffname)', {
                 ['@identifier'] = xPlayer.identifier,
                 ['@time'] = 10,
