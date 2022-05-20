@@ -2,7 +2,7 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-local JailTime = {}
+local TempsJail = {}
 local PlayerDead = {}
 
 RegisterNetEvent('jail:combiendetemps')
@@ -12,31 +12,31 @@ AddEventHandler('jail:combiendetemps', function()
         ['@identifier'] = xPlayer.identifier
     }, function(result)
         if result[1] then
-            if not JailTime[xPlayer.source] then
-                JailTime[xPlayer.source] = {}
-                JailTime[xPlayer.source].time = result[1].time
-                JailTime[xPlayer.source].reason = result[1].raison
-                JailTime[xPlayer.source].staffname = result[1].staffname
-                TriggerClientEvent('jail:requestRequetteJailTime', xPlayer.source, JailTime[xPlayer.source].time)
+            if not TempsJail[xPlayer.source] then
+                TempsJail[xPlayer.source] = {}
+                TempsJail[xPlayer.source].time = result[1].time
+                TempsJail[xPlayer.source].reason = result[1].raison
+                TempsJail[xPlayer.source].staffname = result[1].staffname
+                TriggerClientEvent('jail:encoredutemps', xPlayer.source, TempsJail[xPlayer.source].time)
                 for k,v in pairs(Config.Position["entrée"]) do
                     SetEntityCoords(GetPlayerPed(xPlayer.source), v.x, v.y, v.z)
                 end
                 TriggerClientEvent('esx:showNotification', xPlayer.source, "~r~Vous vous êtes déconnecté en étant en jail")
-                TriggerClientEvent('jail:openmenu', xPlayer.source, JailTime[xPlayer.source].time, JailTime[xPlayer.source].reason, JailTime[xPlayer.source].staffname)
+                TriggerClientEvent('jail:openmenu', xPlayer.source, TempsJail[xPlayer.source].time, TempsJail[xPlayer.source].reason, TempsJail[xPlayer.source].staffname)
             end
         else
-            JailTime[xPlayer.source] = {}
-            JailTime[xPlayer.source].time = 0
+            TempsJail[xPlayer.source] = {}
+            TempsJail[xPlayer.source].time = 0
         end
     end)
 end)
 
 RegisterNetEvent('jail:mettretempsajour')
-AddEventHandler('jail:mettretempsajour', function(NewJailTime)
+AddEventHandler('jail:mettretempsajour', function(NewTempsJail)
     local xPlayer = ESX.GetPlayerFromId(source)
-    JailTime[xPlayer.source].time = NewJailTime
-    if tonumber(JailTime[xPlayer.source].time) == 0 then
-        JailTime[xPlayer.source].time = 0
+    TempsJail[xPlayer.source].time = NewTempsJail
+    if tonumber(TempsJail[xPlayer.source].time) == 0 then
+        TempsJail[xPlayer.source].time = 0
         TriggerClientEvent("esx:showNotification", source, "Votre sanction est maintenant terminé")
         MySQL.Async.execute('DELETE FROM w_jail WHERE `identifier` = @identifier', {
             ['@identifier'] = xPlayer.identifier
@@ -50,28 +50,28 @@ end)
 RegisterCommand('jail', function(source,args)
     local xPlayer = ESX.GetPlayerFromId(source)
     if xPlayer.getGroup() ~= 'user' then
-        local TargetPlayer = ESX.GetPlayerFromId(args[1])
-        if TargetPlayer then
+        local JoueurTarget = ESX.GetPlayerFromId(args[1])
+        if JoueurTarget then
             Wait(100)
-            if tonumber(JailTime[TargetPlayer.source].time) >= 1 then
-                TriggerClientEvent('esx:showNotification', source, "Le joueur est déjà en jail pendant: ~b~"..JailTime[TargetPlayer.source].time.." ~s~minutes")
+            if tonumber(TempsJail[JoueurTarget.source].time) >= 1 then
+                TriggerClientEvent('esx:showNotification', source, "Le joueur est déjà en jail pendant: ~b~"..TempsJail[JoueurTarget.source].time.." ~s~minutes")
             else
                 local reason = table.concat(args, ' ', 3)
-                JailTime[TargetPlayer.source].time = args[2]
-                JailTime[TargetPlayer.source].reason = reason
-                JailTime[TargetPlayer.source].staffname = xPlayer.getName()
-                TriggerClientEvent('jail:requestRequetteJailTime', TargetPlayer.source, JailTime[TargetPlayer.source].time)
+                TempsJail[JoueurTarget.source].time = args[2]
+                TempsJail[JoueurTarget.source].reason = reason
+                TempsJail[JoueurTarget.source].staffname = xPlayer.getName()
+                TriggerClientEvent('jail:encoredutemps', JoueurTarget.source, TempsJail[JoueurTarget.source].time)
                 for k,v in pairs(Config.Position["entrée"]) do
-                    SetEntityCoords(GetPlayerPed(TargetPlayer.source), v.x, v.y, v.z)
+                    SetEntityCoords(GetPlayerPed(JoueurTarget.source), v.x, v.y, v.z)
                 end
                 if args[2] == tostring("1") then 
-                    TriggerClientEvent('esx:showNotification', source, "Vous avez jail ~b~"..GetPlayerName(TargetPlayer.source).." ~s~pendant ~b~"..args[2].." ~s~minute")
-                    TriggerClientEvent('esx:showNotification', TargetPlayer.source, "Vous avez été mit en jail pendant ~b~"..args[2].." ~s~minute")
+                    TriggerClientEvent('esx:showNotification', source, "Vous avez jail ~b~"..GetPlayerName(JoueurTarget.source).." ~s~pendant ~b~"..args[2].." ~s~minute")
+                    TriggerClientEvent('esx:showNotification', JoueurTarget.source, "Vous avez été mit en jail pendant ~b~"..args[2].." ~s~minute")
                 else
-                    TriggerClientEvent('esx:showNotification', source, "Vous avez jail ~b~"..GetPlayerName(TargetPlayer.source).." ~s~pendant ~b~"..args[2].." ~s~minutes")
-                    TriggerClientEvent('esx:showNotification', TargetPlayer.source, "Vous avez été mit en jail pendant ~b~"..args[2].." ~s~minutes")
+                    TriggerClientEvent('esx:showNotification', source, "Vous avez jail ~b~"..GetPlayerName(JoueurTarget.source).." ~s~pendant ~b~"..args[2].." ~s~minutes")
+                    TriggerClientEvent('esx:showNotification', JoueurTarget.source, "Vous avez été mit en jail pendant ~b~"..args[2].." ~s~minutes")
                 end
-                TriggerClientEvent('jail:openmenu', TargetPlayer.source, nil,  JailTime[TargetPlayer.source].reason, JailTime[TargetPlayer.source].staffname)
+                TriggerClientEvent('jail:openmenu', JoueurTarget.source, nil,  TempsJail[JoueurTarget.source].reason, TempsJail[JoueurTarget.source].staffname)
             end
         else
             TriggerClientEvent('esx:showNotification', source, "Aucun joueur trouvé avec l'ID que vous avez entré")
@@ -82,21 +82,21 @@ end)
 RegisterCommand('unjail', function(source, args)
     local xPlayer = ESX.GetPlayerFromId(source)
     if xPlayer.getGroup() ~= 'user' then
-        local TargetPlayer = ESX.GetPlayerFromId(args[1])
-        if TargetPlayer then
+        local JoueurTarget = ESX.GetPlayerFromId(args[1])
+        if JoueurTarget then
             Wait(100)
-            if tonumber(JailTime[TargetPlayer.source].time) >= 0 then
-                JailTime[TargetPlayer.source].time = 0
+            if tonumber(TempsJail[JoueurTarget.source].time) >= 0 then
+                TempsJail[JoueurTarget.source].time = 0
                 TriggerClientEvent('esx:showNotification', source, "Le joueur ~b~"..GetPlayerName(xPlayer.source).." ~s~a été unjail")
-                TriggerClientEvent('jail:requestRequetteJailTime', TargetPlayer.source, 0)
+                TriggerClientEvent('jail:encoredutemps', JoueurTarget.source, 0)
                 for k,v in pairs(Config.Position["sortie"]) do
-                    SetEntityCoords(GetPlayerPed(TargetPlayer.source), v.x, v.y, v.z)
+                    SetEntityCoords(GetPlayerPed(JoueurTarget.source), v.x, v.y, v.z)
                 end
                 MySQL.Async.execute('DELETE FROM w_jail WHERE `identifier` = @identifier', {
-                    ['@identifier'] = TargetPlayer.identifier
+                    ['@identifier'] = JoueurTarget.identifier
                 })
             else
-                TriggerClientEvent('esx:showNotification', source, "Le joueur ~b~"..GetPlayerName(TargetPlayer.source).." ~s~n'est pas en jail")
+                TriggerClientEvent('esx:showNotification', source, "Le joueur ~b~"..GetPlayerName(JoueurTarget.source).." ~s~n'est pas en jail")
             end
         else
             TriggerClientEvent('esx:showNotification', source, "Aucun joueur trouvé avec l'ID que vous avez entré")
@@ -119,13 +119,13 @@ end)
 
 AddEventHandler('playerDropped', function(reason)
     local xPlayer = ESX.GetPlayerFromId(source)
-    if tonumber(JailTime[xPlayer.source].time) > 0 then 
-        reasontobdd = JailTime[xPlayer.source].reason
-        staffnametobb = JailTime[xPlayer.source].staffname    
+    if tonumber(TempsJail[xPlayer.source].time) > 0 then 
+        raisondujail = TempsJail[xPlayer.source].reason
+        nomdustaff = TempsJail[xPlayer.source].staffname    
     end
     if (xPlayer) then
-        if JailTime[xPlayer.source] then
-            local TimeJail = tonumber(JailTime[xPlayer.source].time)
+        if TempsJail[xPlayer.source] then
+            local TimeJail = tonumber(TempsJail[xPlayer.source].time)
             if tonumber(TimeJail) >= 1 then
                 MySQL.Async.fetchAll('SELECT * FROM `w_jail` WHERE `identifier` = @identifier', {
                     ['@identifier'] = xPlayer.identifier
@@ -139,20 +139,20 @@ AddEventHandler('playerDropped', function(reason)
                         MySQL.Async.execute('INSERT INTO w_jail (identifier, time, raison, staffname) VALUES (@identifier, @time, @raison, @staffname)', {
                             ['@identifier'] = xPlayer.identifier,
                             ['@time'] = TimeJail,
-                            ["@raison"] = reasontobdd,
-                            ["@staffname"] = staffnametobb
+                            ["@raison"] = raisondujail,
+                            ["@staffname"] = nomdustaff
                         }, function()
                         end)
                     end
                 end)
-                JailTime[xPlayer.source] = nil
+                TempsJail[xPlayer.source] = nil
             end
         end
         if PlayerDead[source] then 
             MySQL.Async.execute('INSERT INTO w_jail (identifier, time, raison, staffname) VALUES (@identifier, @time, @raison, @staffname)', {
                 ['@identifier'] = xPlayer.identifier,
                 ['@time'] = 10,
-                ["@raison"] = "Déco mort",
+                ["@raison"] = "Déco Mort",
                 ["@staffname"] = "Anti Déco Mort"
             })
         end
