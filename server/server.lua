@@ -71,7 +71,7 @@ RegisterCommand('jail', function(source,args)
                     TriggerClientEvent('esx:showNotification', source, "Vous avez jail ~b~"..GetPlayerName(JoueurTarget.source).." ~s~pendant ~b~"..args[2].." ~s~minutes")
                     TriggerClientEvent('esx:showNotification', JoueurTarget.source, "Vous avez été mit en jail pendant ~b~"..args[2].." ~s~minutes")
                 end
-                TriggerClientEvent('jail:openmenu', JoueurTarget.source, nil,  TempsJail[JoueurTarget.source].reason, TempsJail[JoueurTarget.source].staffname)
+                TriggerClientEvent('jail:openmenu', JoueurTarget.source, nil, TempsJail[JoueurTarget.source].reason, TempsJail[JoueurTarget.source].staffname)
             end
         else
             TriggerClientEvent('esx:showNotification', source, "Aucun joueur trouvé avec l'ID que vous avez entré")
