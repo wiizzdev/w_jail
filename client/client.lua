@@ -38,7 +38,7 @@ AddEventHandler('jail:openmenu', function(time, raison, staffname)
                     if staffname ~= nil then 
                         RageUI.Button("Nom du staff: ~g~"..staffname, nil, {}, true, {})
                     else
-                        RageUI.Button("→ CONSOLE", nil, {}, true, {})
+                        RageUI.Button("CONSOLE", nil, {}, true, {})
                     end
                 end)
             Wait(0)
